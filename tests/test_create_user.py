@@ -17,13 +17,11 @@ class TestCreateUser:
 
 
     @allure.title("Создание уже зарегистрированного пользователя")
-    def test_create_existing_user(self):
-        # Используем ваши реальные данные
-        payload = {
-            "email": "chuvashova_maria@mail.ru",
-            "password": "password123",
-            "name": "Мария"
-        }
+    def test_create_user_without_email(self):
+    @allure.title("Создание уже зарегистрированного пользователя")
+    def test_create_existing_user(self, create_user):
+        # Используем данные из фикстуры create_user, которая гарантированно создаёт пользователя
+        payload = create_user
         with allure.step("Попытка повторной регистрации"):
             response = requests.post(f"{Url.BASE_URL}/api/auth/register", json=payload)
         with allure.step("Проверяем ошибку 'User already exists'"):
@@ -31,9 +29,6 @@ class TestCreateUser:
             data = response.json()
             assert data['success'] is False
             assert data['message'] == 'User already exists'
-
-    @allure.title("Создание пользователя без email")
-    def test_create_user_without_email(self):
         payload = {
             "password": "password",
             "name": "Name"
